@@ -1,18 +1,25 @@
 import { test, expect } from '@playwright/test';
+import { APIHelper } from './apiHelper';
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+const baseUrl = `${process.env.BASE_URL}`;
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
-});
+test.describe('Hotel app - backend tests', () => {
+    let apiHelper: APIHelper;
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+    test.beforeAll('login get access token', async ({ request }) => {
+        apiHelper = new APIHelper(baseUrl);
+        const login = await apiHelper.login(request);
+        expect(login.status()).toBe(200);
+    });
 
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
+    test('get all rooms', async ({ request }) => {
+        const getRooms = await apiHelper.getRoooms(request);
+        expect(getRooms.ok()).toBeTruthy();
+    });
 
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
+    test('get all clients', async ({ request }) => {
+        const getClients = await apiHelper.getClients(request);
+        expect(getClients.ok()).toBeTruthy();
+    });
+
 });
