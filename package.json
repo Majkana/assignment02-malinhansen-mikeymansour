@@ -1,0 +1,21 @@
+{
+  "name": "assignment02-malinhansen-mikeymansour",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "testing": "npx playwright test",
+    "ui-mode": "npx playwright test --ui"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@faker-js/faker": "^9.0.2",
+    "@playwright/test": "^1.47.2",
+    "@types/node": "^22.6.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
