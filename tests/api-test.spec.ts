@@ -18,12 +18,18 @@ test.describe('Hotel app - backend tests', () => {
 
 
     // Rooms section
-    test('get all rooms', async ({ request }) => {
+    test('Test 1 - get all rooms', async ({ request }) => {
         const getRooms = await apiHelper.getRooms(request);
         expect(getRooms.status()).toBe(200);
     });
 
-    test('create room', async ({ request }) => {
+    test('Test 2 - test', async ({ request }) => {
+        const getRoom = await apiHelper.getRoomById(request, '5');
+        expect(getRoom.ok()).toBeFalsy();
+    });
+
+
+    test('Test 3 - create room', async ({ request }) => {
         const payload = dataGenerator.generateRoomData();
         const createRoom = await apiHelper.createRoom(request, payload);
         expect(createRoom.ok()).toBeTruthy();
@@ -56,13 +62,13 @@ test.describe('Hotel app - backend tests', () => {
 
 
     // Clients section
-    test('get all clients', async ({ request }) => {
+    test('Test 4 - get all clients', async ({ request }) => {
         const getClients = await apiHelper.getClients(request);
         expect(getClients.ok()).toBeTruthy();
     });
 
 
-    test('create new client', async ({ request }) => {
+    test('Test 5 - create new client', async ({ request }) => {
         const payload = dataGenerator.generateClientData();
         const createClient = await apiHelper.createClients(request, payload);
         expect(createClient.ok()).toBeTruthy();
@@ -83,26 +89,24 @@ test.describe('Hotel app - backend tests', () => {
             ]));
     });
 
-    test('delete client', async ({ request }) => {
-      const getClients = await apiHelper.getClients(request);
-      const allClients = await getClients.json();
-      const penultimateClientId = allClients[allClients.length -2].id;
+    test('Test 6 - delete client', async ({ request }) => {
+        const getClients = await apiHelper.getClients(request);
+        const allClients = await getClients.json();
+        const penultimateClientId = allClients[allClients.length - 2].id;
 
-      const deleteClient = await apiHelper.deleteClient(request, penultimateClientId);
-      expect(deleteClient.ok()).toBeTruthy();
-      const getClientById = await apiHelper.getClientById(request, penultimateClientId);
-      expect(getClientById.status()).toBe(401); //Borde vara 404???
-
-
-  })
+        const deleteClient = await apiHelper.deleteClient(request, penultimateClientId);
+        expect(deleteClient.ok()).toBeTruthy();
+        const getClientById = await apiHelper.getClientById(request, penultimateClientId);
+        expect(getClientById.status()).toBe(401); //Borde vara 404???
+    });
 
     // Bills section
-    test('get all bills', async ({ request }) => {
+    test('Test 7 - get all bills', async ({ request }) => {
         const getBills = await apiHelper.getBills(request);
         expect(getBills.ok()).toBeTruthy();
     });
 
-    test('create new bill', async ({ request }) => {
+    test('Test 8 - create new bill', async ({ request }) => {
         const payload = dataGenerator.generateBillData();
         const createBills = await apiHelper.createBills(request, payload);
         expect(createBills.ok()).toBeTruthy();
@@ -122,7 +126,7 @@ test.describe('Hotel app - backend tests', () => {
     });
 
     // Reservations section
-    test('create reservation', async ({ request }) => {
+    test('Test 9 - create reservation', async ({ request }) => {
         const getClients = await apiHelper.getClients(request);
         const clientsData = await getClients.json();
         //const numberClients = clientsData.length;
