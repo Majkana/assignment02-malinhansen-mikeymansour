@@ -51,17 +51,17 @@ export class DataGenerator {
         };
     };
 
-    generateReservationData = (numberClients: string, numberRooms: string, numberBills: string) => {
-        const clientId = faker.number.int({ max: Number(numberClients)});
-        const roomId = faker.number.int({ max: Number(numberRooms)});
-        const billId = faker.number.int({ max: Number(numberBills)});
+    generateReservationData = (clients: Array<String>, rooms: Array<string>, bills: Array<string>) => {
+        const clientId = faker.number.int({ max: Number(clients.length -1)});
+        const roomId = faker.number.int({ max: Number(rooms.length -1)});
+        const billId = faker.number.int({ max: Number(bills.length -1)});
         const startDate = faker.date.soon({ days: 365}).toLocaleDateString();
         const endDate = faker.date.soon({ days: 10, refDate: startDate}).toLocaleDateString();
 
         return {
-            client: clientId,
-            room: roomId,
-            bill: billId,
+            client: clients[clientId],
+            room: rooms[roomId],
+            bill: bills[billId],
             start: startDate,
             end: endDate
         };

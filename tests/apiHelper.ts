@@ -85,6 +85,32 @@ export class APIHelper {
         return response;
     };
 
+    async deleteClient(request: APIRequestContext, id: string) {
+        const response = await request.delete(`${this.baseUrl}/client/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-user-auth': JSON.stringify({
+                    username: this.username,
+                    token: this.token
+                })
+            },
+        });
+        return response;
+    };
+
+    async getClientById(request: APIRequestContext, id: string) {
+        const response = await request.get(`${this.baseUrl}/client/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-user-auth': JSON.stringify({
+                    username: this.username,
+                    token: this.token
+                })
+            },
+        });
+        return response;
+    };
+
     // Bills section
     async getBills(request: APIRequestContext) {
         const response = await request.get(`${this.baseUrl}/bills`, {
@@ -112,5 +138,20 @@ export class APIHelper {
         });
         return response;
     };
+
+// Reservation section
+    async getReservations(request: APIRequestContext) {
+        const response = await request.get(`${this.baseUrl}/reservations`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-user-auth': JSON.stringify({
+                    username: this.username,
+                    token: this.token
+                })
+            }
+        });
+        return response;
+    };
+
 
 };
