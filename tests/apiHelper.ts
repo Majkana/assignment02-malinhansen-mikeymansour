@@ -22,7 +22,6 @@ export class APIHelper {
             })
         });
         const responseData = await response.json();
-        console.log(responseData); // TA BORT!
         this.username = responseData.username;
         this.token = responseData.token;
         return response;
