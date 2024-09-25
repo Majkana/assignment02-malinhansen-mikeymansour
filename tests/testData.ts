@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import exp from "constants";
 
 export const generateRoomData = () => {
     const floorNumber = faker.number.int({ min: 1, max: 20 }).toString();
@@ -29,3 +30,20 @@ export const generateRoomData = () => {
         features: roomFeatures
     };
 };
+
+
+export const generateClientData = () => {
+  const email = faker.internet.email();
+  const name = faker.person.fullName();
+  const telephone = faker.phone.number();
+
+  return {
+    email: email,
+    name: name,
+    telephone: telephone
+  }
+
+}
+
+
+                 
