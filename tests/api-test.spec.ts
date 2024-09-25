@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { APIHelper } from './apiHelper';
-import { generateRoomData } from './testData';
+import { generateClientData, generateRoomData } from './testData';
 
 const baseUrl = `${process.env.BASE_URL}`;
 
@@ -14,7 +14,7 @@ test.describe('Hotel app - backend tests', () => {
     });
 
     test('get all rooms', async ({ request }) => {
-        const getRooms = await apiHelper.getRoooms(request);
+        const getRooms = await apiHelper.getRooms(request);
         expect(getRooms.status()).toBe(200);
     });
 
@@ -33,7 +33,7 @@ test.describe('Hotel app - backend tests', () => {
             })
           );
 
-        const getRooms = await apiHelper.getRoooms(request);
+        const getRooms = await apiHelper.getRooms(request);
         expect(await getRooms.json()).toEqual(
             expect.arrayContaining([
               expect.objectContaining({
@@ -52,6 +52,28 @@ test.describe('Hotel app - backend tests', () => {
     test('get all clients', async ({ request }) => {
         const getClients = await apiHelper.getClients(request);
         expect(getClients.ok()).toBeTruthy();
+    });
+
+
+    test('create new client', async ({ request }) => {
+      const payload = generateClientData();
+      const createClient = await apiHelper.createClients(request, payload);
+      expect(createClient.ok()).toBeTruthy();
+      expect(await createClient.json()).toMatchObject({
+        email: payload.email,
+        name: payload.name,
+        telephone: payload.telephone
+    })
+
+    const getClients = await apiHelper.getClients(request);
+        expect(await getClients.json()).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                email: payload.email,
+                name: payload.name,
+              telephone: payload.telephone
+              }),
+            ]));
     });
 
 });

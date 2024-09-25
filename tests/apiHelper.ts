@@ -26,7 +26,7 @@ export class APIHelper {
         return response;
     };
 
-    async getRoooms(request: APIRequestContext) {
+    async getRooms(request: APIRequestContext) {
         const response = await request.get(`${this.baseUrl}/rooms`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -65,4 +65,20 @@ export class APIHelper {
         });
         return response;
     };
+
+    async createClients(request: APIRequestContext, payload: object) {
+        const response = await request.post(`${this.baseUrl}/client/new`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-user-auth': JSON.stringify({
+                    username: this.username,
+                    token: this.token
+                })
+            },
+            data: JSON.stringify(payload)
+        });
+        return response;
+    }
+
+
 };
