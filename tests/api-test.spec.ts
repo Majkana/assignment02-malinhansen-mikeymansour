@@ -1,18 +1,21 @@
 import { test, expect } from '@playwright/test';
 import { APIHelper } from './apiHelper';
-import { generateClientData, generateRoomData } from './testData';
+import { generateBillsData, generateClientData, generateRoomData } from './testData';
 
 const baseUrl = `${process.env.BASE_URL}`;
 
 test.describe('Hotel app - backend tests', () => {
     let apiHelper: APIHelper;
 
+// Login section
     test.beforeAll('login, get access token', async ({ request }) => {
         apiHelper = new APIHelper(baseUrl);
         const login = await apiHelper.login(request);
         expect(login.status()).toBe(200);
     });
 
+
+// Rooms section
     test('get all rooms', async ({ request }) => {
         const getRooms = await apiHelper.getRooms(request);
         expect(getRooms.status()).toBe(200);
@@ -49,6 +52,8 @@ test.describe('Hotel app - backend tests', () => {
         console.log(await getRooms.json());
     });
 
+
+// Clients section
     test('get all clients', async ({ request }) => {
         const getClients = await apiHelper.getClients(request);
         expect(getClients.ok()).toBeTruthy();
@@ -75,5 +80,32 @@ test.describe('Hotel app - backend tests', () => {
               }),
             ]));
     });
+
+
+// Bills section
+    test('get all bills', async ({ request }) => {
+      const getBills = await apiHelper.getBills(request);
+      expect(getBills.ok()).toBeTruthy();
+  });
+
+  
+  test('create new bill', async ({ request }) => {
+    const payload = generateBillsData();
+    const createBills = await apiHelper.createBills(request, payload);
+    expect(createBills.ok()).toBeTruthy();
+    expect(await createBills.json()).toMatchObject({
+      value: payload.value,
+      paid: payload.paid
+  })
+
+  const getBills = await apiHelper.getBills(request);
+      expect(await getBills.json()).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              value: payload.value,
+              paid: payload.paid
+            }),
+          ]));
+  });
 
 });

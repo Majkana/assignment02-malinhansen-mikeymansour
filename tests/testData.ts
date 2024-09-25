@@ -45,5 +45,16 @@ export const generateClientData = () => {
 
 }
 
+export const generateBillsData = () => {
+  const value = faker.number.int({min: 1, max: 20});
+  const paid = faker.datatype.boolean();
+
+  return {
+    value: value,
+    paid: paid
+    }
+
+}
+
 
                  
