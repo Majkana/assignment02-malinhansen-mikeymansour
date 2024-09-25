@@ -10,7 +10,7 @@ export class APIHelper {
     }
 
 
-// Login section
+    // Login section
     async login(request: APIRequestContext) {
         const response = await request.post(`${this.baseUrl}/login`, {
             headers: {
@@ -28,9 +28,22 @@ export class APIHelper {
     };
 
 
-// Rooms section
+    // Rooms section
     async getRooms(request: APIRequestContext) {
         const response = await request.get(`${this.baseUrl}/rooms`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-user-auth': JSON.stringify({
+                    username: this.username,
+                    token: this.token
+                })
+            }
+        });
+        return response;
+    };
+
+    async getRoomById(request: APIRequestContext, id: string) {
+        const response = await request.get(`${this.baseUrl}/room/${id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'x-user-auth': JSON.stringify({
@@ -57,7 +70,7 @@ export class APIHelper {
     };
 
 
-// Clients section
+    // Clients section
     async getClients(request: APIRequestContext) {
         const response = await request.get(`${this.baseUrl}/clients`, {
             headers: {
@@ -124,7 +137,7 @@ export class APIHelper {
         });
         return response;
     };
-    
+
     async createBills(request: APIRequestContext, payload: object) {
         const response = await request.post(`${this.baseUrl}/bill/new`, {
             headers: {
@@ -139,7 +152,7 @@ export class APIHelper {
         return response;
     };
 
-// Reservation section
+    // Reservation section
     async getReservations(request: APIRequestContext) {
         const response = await request.get(`${this.baseUrl}/reservations`, {
             headers: {
