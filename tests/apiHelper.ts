@@ -20,7 +20,7 @@ export class APIHelper {
             })
         });
         const responseData = await response.json();
-        console.log(responseData);
+        console.log(responseData); // TA BORT!
         this.username = responseData.username;
         this.token = responseData.token;
         return response;
@@ -35,6 +35,20 @@ export class APIHelper {
                     token: this.token
                 })
             }
+        });
+        return response;
+    };
+
+    async createRoom(request: APIRequestContext, payload: object) {
+        const response = await request.post(`${this.baseUrl}/room/new`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-user-auth': JSON.stringify({
+                    username: this.username,
+                    token: this.token
+                })
+            },
+            data: JSON.stringify(payload)
         });
         return response;
     };
