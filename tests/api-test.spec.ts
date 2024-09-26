@@ -97,7 +97,7 @@ test.describe('Hotel app - backend tests', () => {
         const deleteClient = await apiHelper.deleteClient(request, penultimateClientId);
         expect(deleteClient.ok()).toBeTruthy();
         const getClientById = await apiHelper.getClientById(request, penultimateClientId);
-        expect(getClientById.status()).toBe(401); //Borde vara 404???
+        expect(getClientById.status()).toBe(401); // Borde vara 404??? Kolla mot 401. IRL kolla med teamet.
     });
 
     // Bills section
@@ -129,21 +129,38 @@ test.describe('Hotel app - backend tests', () => {
     test('Test 9 - create reservation', async ({ request }) => {
         const getClients = await apiHelper.getClients(request);
         const clientsData = await getClients.json();
-        //const numberClients = clientsData.length;
-        //console.log(clientsData);
-
+        let clientIds = clientsData.map(({ id }) => id);
 
         const getRooms = await apiHelper.getRooms(request);
         const roomsData = await getRooms.json();
-        //const numberRooms = roomsData.length;
+        let roomIds = roomsData.map(({ id }) => id);
 
         const getBills = await apiHelper.getBills(request);
         const billsData = await getBills.json();
-        //const numberBills = billsData.length;
+        let billIds = billsData.map(({ id }) => id);
 
-        const payload = dataGenerator.generateReservationData(clientsData, roomsData, billsData);
-        console.log(payload);
-    })
+        const payload = dataGenerator.generateReservationData(clientIds, roomIds, billIds);
+        const createReservation = await apiHelper.createReservation(request, payload);
+        expect(createReservation.ok()).toBeTruthy();
+        expect(await createReservation.json()).toMatchObject({
+            client: payload.client,
+            room: payload.room,
+            bill: payload.bill,
+            start: payload.start,
+            end: payload.end
+        });
 
+        const getReservations = await apiHelper.getReservations(request);
+        expect(await getReservations.json()).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    client: payload.client,
+                    room: payload.room,
+                    bill: payload.bill,
+                    start: payload.start,
+                    end: payload.end
+                }),
+            ]));
+    });
 
 });
