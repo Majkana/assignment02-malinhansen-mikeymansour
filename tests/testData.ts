@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 
 export class DataGenerator {
+    // Rooms section
     generateRoomData = () => {
         const floorNumber = faker.number.int({ min: 1, max: 20 }).toString();
         const roomNumber = faker.number.int({ min: 1, max: 9 }).toString();
@@ -29,6 +30,7 @@ export class DataGenerator {
         };
     };
 
+    // Clients section
     generateClientData = () => {
         const email = faker.internet.email();
         const name = faker.person.fullName();
@@ -41,6 +43,7 @@ export class DataGenerator {
         };
     };
 
+    // Bills section
     generateBillData = () => {
         const value = faker.number.int({ min: 1, max: 20 });
         const paid = faker.datatype.boolean();
@@ -51,6 +54,7 @@ export class DataGenerator {
         };
     };
 
+    // Reservations section
     generateReservationData = (clientIds: Array<string>, roomIds: Array<string>, billIds: Array<string>) => {
         const clientId = Math.floor(Math.random() * clientIds.length);
         const roomId = Math.floor(Math.random() * roomIds.length);

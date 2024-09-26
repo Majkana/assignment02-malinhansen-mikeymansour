@@ -23,13 +23,7 @@ test.describe('Hotel app - backend tests', () => {
         expect(getRooms.status()).toBe(200);
     });
 
-    test('Test 2 - test', async ({ request }) => {
-        const getRoom = await apiHelper.getRoomById(request, '5');
-        expect(getRoom.ok()).toBeFalsy();
-    });
-
-
-    test('Test 3 - create room', async ({ request }) => {
+    test('Test 2 - create new room', async ({ request }) => {
         const payload = dataGenerator.generateRoomData();
         const createRoom = await apiHelper.createRoom(request, payload);
         expect(createRoom.ok()).toBeTruthy();
@@ -54,29 +48,62 @@ test.describe('Hotel app - backend tests', () => {
                     available: payload.available,
                     price: payload.price,
                     features: payload.features
-                }),
-            ]));
+                })
+            ])
+        );
+    });
 
-        console.log(await getRooms.json());
+    test('Test 3 - edit room', async ({ request }) => {
+        const getRooms = await apiHelper.getRooms(request);
+        const allRooms = await getRooms.json();
+        const penultimateRoomId = allRooms[allRooms.length - 2].id;
+        const penultimateRoomCreated = allRooms[allRooms.length - 2].created;
+
+        let payload = dataGenerator.generateRoomData();
+        payload['id'] = penultimateRoomId;
+        payload['created'] = penultimateRoomCreated;
+
+        const editRoom = await apiHelper.editRoom(request, penultimateRoomId, payload);
+        expect(editRoom.ok()).toBeTruthy();
+        expect(await editRoom.json()).toMatchObject(
+            expect.objectContaining({
+                category: payload.category,
+                number: payload.number,
+                floor: payload.floor,
+                available: payload.available,
+                price: payload.price,
+                features: payload.features,
+                id: penultimateRoomId,
+                created: penultimateRoomCreated
+            })
+        );
+
+        const getRoomById = await apiHelper.getRoomById(request, penultimateRoomId);
+        expect(await getRoomById.json()).toMatchObject(
+            expect.objectContaining({
+                category: payload.category,
+                number: payload.number,
+                floor: payload.floor,
+                available: payload.available,
+                price: payload.price,
+                features: payload.features,
+                id: penultimateRoomId,
+                created: penultimateRoomCreated
+            })
+        );
     });
 
 
     // Clients section
-    test('Test 4 - get all clients', async ({ request }) => {
-        const getClients = await apiHelper.getClients(request);
-        expect(getClients.ok()).toBeTruthy();
-    });
-
-
-    test('Test 5 - create new client', async ({ request }) => {
+    test('Test 4 - create new client', async ({ request }) => {
         const payload = dataGenerator.generateClientData();
-        const createClient = await apiHelper.createClients(request, payload);
+        const createClient = await apiHelper.createClient(request, payload);
         expect(createClient.ok()).toBeTruthy();
         expect(await createClient.json()).toMatchObject({
             email: payload.email,
             name: payload.name,
             telephone: payload.telephone
-        })
+        });
 
         const getClients = await apiHelper.getClients(request);
         expect(await getClients.json()).toEqual(
@@ -86,34 +113,36 @@ test.describe('Hotel app - backend tests', () => {
                     name: payload.name,
                     telephone: payload.telephone
                 }),
-            ]));
+            ])
+        );
     });
 
-    test('Test 6 - delete client', async ({ request }) => {
+    test('Test 5 - delete client', async ({ request }) => {
         const getClients = await apiHelper.getClients(request);
         const allClients = await getClients.json();
         const penultimateClientId = allClients[allClients.length - 2].id;
 
         const deleteClient = await apiHelper.deleteClient(request, penultimateClientId);
         expect(deleteClient.ok()).toBeTruthy();
+
         const getClientById = await apiHelper.getClientById(request, penultimateClientId);
         expect(getClientById.status()).toBe(401); // Borde vara 404??? Kolla mot 401. IRL kolla med teamet.
     });
 
     // Bills section
-    test('Test 7 - get all bills', async ({ request }) => {
+    test('Test 6 - get all bills', async ({ request }) => {
         const getBills = await apiHelper.getBills(request);
         expect(getBills.ok()).toBeTruthy();
     });
 
-    test('Test 8 - create new bill', async ({ request }) => {
+    test('Test 7 - create new bill', async ({ request }) => {
         const payload = dataGenerator.generateBillData();
-        const createBills = await apiHelper.createBills(request, payload);
-        expect(createBills.ok()).toBeTruthy();
-        expect(await createBills.json()).toMatchObject({
+        const createBill = await apiHelper.createBill(request, payload);
+        expect(createBill.ok()).toBeTruthy();
+        expect(await createBill.json()).toMatchObject({
             value: payload.value,
             paid: payload.paid
-        })
+        });
 
         const getBills = await apiHelper.getBills(request);
         expect(await getBills.json()).toEqual(
@@ -122,8 +151,41 @@ test.describe('Hotel app - backend tests', () => {
                     value: payload.value,
                     paid: payload.paid
                 }),
-            ]));
+            ])
+        );
     });
+
+    test('Test 8 - edit bill', async ({ request }) => {
+        const getBills = await apiHelper.getBills(request);
+        const allBills = await getBills.json();
+        const penultimateBillId = allBills[allBills.length - 2].id;
+        const penultimateBillCreated = allBills[allBills.length - 2].created;
+
+        let payload = dataGenerator.generateBillData();
+        payload['id'] = penultimateBillId;
+        payload['created'] = penultimateBillCreated;
+
+        const editBill = await apiHelper.editBill(request, penultimateBillId, payload);
+        expect(editBill.ok()).toBeTruthy();
+        expect(await editBill.json()).toMatchObject(
+            expect.objectContaining({
+                value: payload.value,
+                paid: payload.paid,
+                id: penultimateBillId,
+                created: penultimateBillCreated
+            })
+        );
+
+        const getBillById = await apiHelper.getBillById(request, penultimateBillId);
+        expect(await getBillById.json()).toMatchObject(
+            expect.objectContaining({
+                value: payload.value,
+                paid: payload.paid,
+                id: penultimateBillId,
+                created: penultimateBillCreated
+            })
+        );
+    })
 
     // Reservations section
     test('Test 9 - create reservation', async ({ request }) => {
@@ -160,7 +222,23 @@ test.describe('Hotel app - backend tests', () => {
                     start: payload.start,
                     end: payload.end
                 }),
-            ]));
+            ])
+        );
     });
 
+    test('Test 10 - delete reservation', async ({ request }) => {
+        let getReservations = await apiHelper.getReservations(request);
+        let allReservations = await getReservations.json();
+        const numberReservationsBeforeDelete = allReservations.length;
+        const penultimateReservationId = allReservations[allReservations.length - 2].id;
+
+        const deleteReservation = await apiHelper.deleteReservation(request, penultimateReservationId);
+        expect(deleteReservation.ok()).toBeTruthy();
+
+        getReservations = await apiHelper.getReservations(request);
+        allReservations = await getReservations.json();
+        const numberReservationsAfterDelete = allReservations.length;
+
+        expect(numberReservationsAfterDelete - numberReservationsBeforeDelete).toEqual(-1);
+    });
 });
