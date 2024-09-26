@@ -9,7 +9,6 @@ export class APIHelper {
         this.baseUrl = baseUrl;
     }
 
-
     // Login section
     async login(request: APIRequestContext) {
         const response = await request.post(`${this.baseUrl}/login`, {
@@ -69,6 +68,19 @@ export class APIHelper {
         return response;
     };
 
+    async editRoom(request: APIRequestContext, id: string, payload: object) {
+        const response = await request.put(`${this.baseUrl}/room/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-user-auth': JSON.stringify({
+                    username: this.username,
+                    token: this.token
+                })
+            },
+            data: JSON.stringify(payload)
+        });
+        return response;
+    };
 
     // Clients section
     async getClients(request: APIRequestContext) {
@@ -84,7 +96,20 @@ export class APIHelper {
         return response;
     };
 
-    async createClients(request: APIRequestContext, payload: object) {
+    async getClientById(request: APIRequestContext, id: string) {
+        const response = await request.get(`${this.baseUrl}/client/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-user-auth': JSON.stringify({
+                    username: this.username,
+                    token: this.token
+                })
+            },
+        });
+        return response;
+    };
+    
+    async createClient(request: APIRequestContext, payload: object) {
         const response = await request.post(`${this.baseUrl}/client/new`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -111,18 +136,6 @@ export class APIHelper {
         return response;
     };
 
-    async getClientById(request: APIRequestContext, id: string) {
-        const response = await request.get(`${this.baseUrl}/client/${id}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'x-user-auth': JSON.stringify({
-                    username: this.username,
-                    token: this.token
-                })
-            },
-        });
-        return response;
-    };
 
     // Bills section
     async getBills(request: APIRequestContext) {
@@ -133,13 +146,40 @@ export class APIHelper {
                     username: this.username,
                     token: this.token
                 })
-            },
+            }
         });
         return response;
     };
 
-    async createBills(request: APIRequestContext, payload: object) {
+    async getBillById(request: APIRequestContext, id: string) {
+        const response = await request.get(`${this.baseUrl}/bill/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-user-auth': JSON.stringify({
+                    username: this.username,
+                    token: this.token
+                })
+            }
+        });
+        return response;
+    };
+
+    async createBill(request: APIRequestContext, payload: object) {
         const response = await request.post(`${this.baseUrl}/bill/new`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-user-auth': JSON.stringify({
+                    username: this.username,
+                    token: this.token
+                })
+            },
+            data: JSON.stringify(payload)
+        });
+        return response;
+    };
+
+    async editBill(request: APIRequestContext, id: string, payload: object) {
+        const response = await request.put(`${this.baseUrl}/bill/${id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'x-user-auth': JSON.stringify({
@@ -180,4 +220,16 @@ export class APIHelper {
         return response;
     };
 
+    async deleteReservation(request: APIRequestContext, id: string) {
+        const response = await request.delete(`${this.baseUrl}/reservation/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-user-auth': JSON.stringify({
+                    username: this.username,
+                    token: this.token
+                })
+            }
+        });
+        return response;
+    };
 };
