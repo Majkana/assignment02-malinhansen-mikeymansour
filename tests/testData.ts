@@ -30,6 +30,15 @@ export class DataGenerator {
         };
     };
 
+    editRoomData = (id: string, created: string) => {
+        let payload = this.generateRoomData();
+        payload['id'] = id;
+        payload['created'] = created;
+
+        return payload;
+    };
+
+
     // Clients section
     generateClientData = () => {
         const email = faker.internet.email();
@@ -43,6 +52,7 @@ export class DataGenerator {
         };
     };
 
+
     // Bills section
     generateBillData = () => {
         const value = faker.number.int({ min: 1, max: 20 });
@@ -54,13 +64,22 @@ export class DataGenerator {
         };
     };
 
+    editBillData = (id: string, created: string) => {
+        let payload = this.generateBillData();
+        payload['id'] = id;
+        payload['created'] = created;
+
+        return payload;
+    };
+
+
     // Reservations section
     generateReservationData = (clientIds: Array<string>, roomIds: Array<string>, billIds: Array<string>) => {
         const clientId = Math.floor(Math.random() * clientIds.length);
         const roomId = Math.floor(Math.random() * roomIds.length);
         const billId = Math.floor(Math.random() * billIds.length);
-        const startDate = faker.date.soon({ days: 365}).toLocaleDateString();
-        const endDate = faker.date.soon({ days: 10, refDate: startDate}).toLocaleDateString();
+        const startDate = faker.date.soon({ days: 365 }).toLocaleDateString();
+        const endDate = faker.date.soon({ days: 10, refDate: startDate }).toLocaleDateString();
 
         return {
             client: clientIds[clientId],
