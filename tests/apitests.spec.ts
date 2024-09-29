@@ -20,7 +20,10 @@ test.describe('Hotel app - backend tests', () => {
     // Rooms section
     test('Test 1 - get all rooms', async ({ request }) => {
         const getRooms = await apiHelper.getRooms(request);
+        const getRoomsData = await getRooms.json();
+
         expect(getRooms.status()).toBe(200);
+        expect(getRoomsData.length).toBeGreaterThan(0);
     });
 
     test('Test 2 - create new room', async ({ request }) => {
@@ -79,15 +82,19 @@ test.describe('Hotel app - backend tests', () => {
         expect(deleteClient.ok()).toBeTruthy();
 
         const getClientById = await apiHelper.getClientById(request, penultimateClientId);
-        expect(getClientById.status()).toBe(401); // Borde vara 404??? Kolla mot 401. IRL kolla med teamet.
+        expect(getClientById.status()).toBe(401);
     });
 
 
     // Bills section
     test('Test 6 - get all bills', async ({ request }) => {
         const getBills = await apiHelper.getBills(request);
+        const getBillsData = await getBills.json();
+
         expect(getBills.ok()).toBeTruthy();
+        expect(getBillsData.length).toBeGreaterThanOrEqual(1);
     });
+
 
     test('Test 7 - create new bill', async ({ request }) => {
         const payload = dataGenerator.generateBillData();
